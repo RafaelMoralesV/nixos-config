@@ -141,6 +141,8 @@
     wget
     tree
     curl
+    stdenv
+    gcc
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

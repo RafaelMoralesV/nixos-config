@@ -5,7 +5,7 @@
     ../../modules/home-manager/hyprland.nix
     ../../modules/home-manager/git.nix
     ../../modules/home-manager/nvim.nix
-    # ../../modules/home-manager/alacritty.nix
+    ../../modules/home-manager/alacritty.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
