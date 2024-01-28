@@ -1,10 +1,18 @@
-{ pkgs, ... }:
+{ lib, config, pkgs, ... }:
 
+let
+  cfg = config.git-config;
+in
 {
-  home.packages = [ pkgs.git ];
-  programs.git = {
-    enable = true;
-    userName = "Rafael Morales";
-    userEmail = "rmorales@utem.cl";
+  options.git-config = {
+    enable = lib.mkEnableOption "Enable my Git Config";
+  };
+  
+  config = lib.mkIf cfg.enable {
+    programs.git = {
+      enable = true;
+      userName = "Rafael Morales";
+      userEmail = "rmorales@utem.cl";
+    };
   };
 }
