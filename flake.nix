@@ -4,12 +4,12 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    hyprland.url = "github:hyprwm/Hyprland";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland.url = "github:hyprwm/Hyprland";
   };
 
   outputs = { self, nixpkgs, home-manager, hyprland, ... }@inputs:
@@ -26,13 +26,11 @@
           ];
         };
 
-      homeConfigurations."user@hostname" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-
+      homeConfigurations."rafael@nixos" = home-manager.lib.homeManagerConfiguration {
         modules = [
-  	hyprland.homeManagerModules.default
-  	{wayland.windowManager.hyprland.enable = true;}
-  	# ...
+  	        hyprland.homeManagerModules.default
+  	      {wayland.windowManager.hyprland.enable = true;}
+  	      # ...
         ];
       };
     };
