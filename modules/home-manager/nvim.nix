@@ -1,5 +1,6 @@
 { pkgs, ... }:
 
+# Esto deberia ser NixVim
 {
   home.packages = with pkgs; [ 
     nerdfonts

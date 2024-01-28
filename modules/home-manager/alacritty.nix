@@ -1,29 +1,38 @@
-{ ... }:
+{ lib, config, ... }:
 
+let
+  cfg = config.alacritty-config;
+in
 {
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      env.TERM = "xterm-256color";
+  options.alacritty-config = {
+    enable = lib.mkEnableOption "Enable my Alacritty Config";
+  };
 
-      window.opacity = 0.8;
+  config = lib.mkIf cfg.enable {
+    programs.alacritty = {
+      enable = true;
+      settings = {
+        env.TERM = "xterm-256color";
 
-      font = {
-        size = 12.0;
+        window.opacity = 0.8;
 
-        normal.family = "Agave Nerd Font";
-        bold.family = "Agave Nerd Font";
-        italic.family = "Agave Nerd Font";
+        font = {
+          size = 12.0;
+
+          normal.family = "Agave Nerd Font";
+          bold.family = "Agave Nerd Font";
+          italic.family = "Agave Nerd Font";
+        };
+
+        cursor.style = {
+          shape = "Beam";
+          blinking = "Always";
+        };
+
+        keyboard.bindings = [
+          { key = "Return"; mods = "Control|Shift"; action = "CreateNewWindow"; }
+        ];
       };
-
-      cursor.style = {
-        shape = "Beam";
-        blinking = "Always";
-      };
-
-      keyboard.bindings = [
-        { key = "Return"; mods = "Control|Shift"; action = "CreateNewWindow"; }
-      ];
     };
   };
 }

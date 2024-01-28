@@ -1,12 +1,7 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/home-manager/hyprland.nix
-    ../../modules/home-manager/git.nix
-    ../../modules/home-manager/nvim.nix
-    ../../modules/home-manager/alacritty.nix
-  ];
+  imports = [ ../../modules/home-manager ];
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -14,6 +9,7 @@
   home.homeDirectory = "/home/rafael";
 
   git-config.enable = true;
+  alacritty-config.enable = true;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -29,6 +25,7 @@
   home.packages = with pkgs; [
     vesktop
     keepassxc
+    rustup
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
