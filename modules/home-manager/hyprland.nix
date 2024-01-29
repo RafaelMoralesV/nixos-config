@@ -17,6 +17,19 @@ in
     settings = {
       "$mod" = "SUPER";
 
+      env = [
+        "QT_QPA_PLATFORMTHEME,qt5ct"
+      ];
+
+      input = {
+        kb_layout = "us,latam";
+        kb_options = "grp:ctrl_alt_toggle";
+
+        follow_mouse = 1;
+
+        sensitivity = 0;
+      };
+
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -61,10 +74,15 @@ in
         ];
       };
 
+      exec-once = [
+        "polkit-gnome-authentication-agent-1"
+        "mako"
+      ];
+
       bind = [
           "$mod, Return, exec, alacritty"
-          "$mod, Q, exec, killactive"
-          "$mod, M, exit"
+          "$mod, Q, killactive,"
+          "$mod, M, exit,"
           "$mod, D, exec, ${menu}"
 
           # Focus windows
@@ -74,7 +92,7 @@ in
           "$mod, L, movefocus, r"
 
           # Mover ventana usando Super
-          "$mod, mouse:272, movewindow"
+          "$mod, mouse:272, movewindow,"
         ]
         ++ (
           # workspaces

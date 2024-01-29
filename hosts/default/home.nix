@@ -13,6 +13,9 @@
   home.username = "rafael";
   home.homeDirectory = "/home/rafael";
 
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   git-config.enable = true;
   alacritty-config.enable = true;
 
@@ -31,6 +34,8 @@
     vesktop
     keepassxc
     rustup
+    spotify
+    lutris
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
