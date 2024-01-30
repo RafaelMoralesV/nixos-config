@@ -12,18 +12,20 @@
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = { self, nixpkgs, home-manager, hyprland, ... }@inputs:
-    let
+  outputs = { nixpkgs, ... } @ inputs: let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
-          specialArgs = {inherit inputs;};
-          modules = [ 
-            ./hosts/default/configuration.nix
-            inputs.home-manager.nixosModules.default
-          ];
-        };
+      myLib = import ./myLib/default.nix { inherit inputs; };
+  in
+    with myLib; {
+
+      nixosConfigurations = {
+        default = mkSystem ./hosts/default/configuration.nix;
+      };
+
+      homeConfigurations = {
+        "rafael@nixos" = mkHome "${system}" ./hosts/default/home.nix;
+      };
+
+      homeManagerModules.default = ./modules/home-manager/default.nix;
     };
 }

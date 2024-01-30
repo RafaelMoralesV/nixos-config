@@ -1,12 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, outputs, ... }:
 
 {
-  imports = [ 
-    ../../modules/home-manager/alacritty.nix
-    ../../modules/home-manager/nvim.nix
-    ../../modules/home-manager/hyprland.nix
-    ../../modules/home-manager/git.nix
-  ];
+  imports = [ outputs.homeManagerModules.default ];
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -16,8 +11,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  git-config.enable = true;
-  alacritty-config.enable = true;
+  hyperland.enable = true;
+  alacritty.enable = true;
+  waybar.enable = true;
+  git.enable = true;
+  btop.enable = true;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
