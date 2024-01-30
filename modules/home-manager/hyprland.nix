@@ -21,6 +21,11 @@ in
         "QT_QPA_PLATFORMTHEME,qt5ct"
       ];
 
+      monitor = [
+        "HDMI-A-1, 1920x1080@60, 0x0, 1"
+        "HDMI-A-2, 1360x768@60, -1360x450, 1"
+      ];
+
       input = {
         kb_layout = "us,latam";
         kb_options = "grp:ctrl_alt_toggle";
