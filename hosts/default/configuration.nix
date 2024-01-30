@@ -2,14 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, phps, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
+  imports = [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       inputs.home-manager.nixosModules.default
-    ];
+      #../../modules/nixos/apache-httpd.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -20,6 +20,7 @@
     substituters = ["https://hyprland.cachix.org"];
     trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
+
   # Nvidia Driver
   hardware.nvidia = {
     # Modesetting is required.
@@ -41,7 +42,7 @@
     open = false;
 
     # Enable the Nvidia settings menu,
-	# accessible via `nvidia-settings`.
+	  # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
@@ -163,10 +164,58 @@
     curl
     stdenv
     gcc
+    apacheHttpd
+    dbeaver
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
+  services.httpd = let
+  # using pkgs2 to avoid recursive loop with fetchFromGitHub
+  # see https://stackoverflow.com/questions/73097604/nixos-how-to-import-some-configuration-from-gitlab-infinite-recursion-encounte
+  pkgs2 = (import <nixpkgs> { });
+  nix-phps = pkgs2.fetchFromGitHub {
+    owner = "fossar";
+    repo = "nix-phps";
+    rev = "ac2bb3d416a10fc66d0148dddc63a19c6c5a907c";
+    hash = "sha256-74kQIFf3Cu1aeOsohCiLuA1aXNGYt2U9tTUP0yvm4EA=";
+  };
+  phps = import nix-phps;
+in
+  { 
+    enable = true;
+    enablePHP = true;
+    phpPackage = phps.packages.x86_64-linux.php74.buildEnv {
+      extensions = { enabled, all }: enabled ++ (with all; [ 
+        imagick opcache pdo session pdo_mysql filter 
+        curl dom mbstring 
+      ]);
+      extraConfig = "memory_limit=32M; display_errors=1;";
+    };
+    user = "rafael";
+
+    virtualHosts.localhost = {
+        documentRoot = "/home/rafael/proyectos";
+        extraConfig = ''<Directory /home/rafael/proyectos>
+          Options Indexes FollowSymLinks Includes ExecCGI
+          AllowOverride All
+          Require all granted
+          Allow from all
+        </Directory>'';
+    };
+  };
+
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    ensureDatabases = [ "adaspal1_gestion" ];
+    ensureUsers = [
+      {
+        name = "root";
+        ensurePermissions = { "*.*" = "ALL PRIVILEGES"; }; 
+      }
+    ];
+  };
+
+  # Some programs need SUID wrappers, can be configured further or are started in user sessions.
   # programs.mtr.enable = true;
   # programs.gnupg.agent = {
   #   enable = true;
