@@ -5,10 +5,9 @@
 { config, pkgs, inputs, ... }:
 
 {
-  imports = [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.default
-  ];
+  imports = [ ./hardware-configuration.nix ];
+
+  myNixOs.bundles.home-manager.enable = true;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

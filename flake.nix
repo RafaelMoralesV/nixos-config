@@ -13,7 +13,6 @@
   };
 
   outputs = { nixpkgs, ... } @ inputs: let
-      system = "x86_64-linux";
       myLib = import ./myLib/default.nix { inherit inputs; };
   in
     with myLib; {
@@ -23,9 +22,10 @@
       };
 
       homeConfigurations = {
-        "rafael@nixos" = mkHome "${system}" ./hosts/default/home.nix;
+        "rafael@nixos" = mkHome "x86_64-linux" ./hosts/default/home.nix;
       };
 
-      homeManagerModules.default = ./modules/home-manager/default.nix;
+      homeManagerModules.default = ./homeManagerModules;
+      nixosModules.default = ./nixosModules;
     };
 }
